@@ -27,7 +27,22 @@ class ViewController: UIViewController {
         // Make the sceneview run the configurations
         self.sceneView.session.run(configuration)
     }
-
+    
+    @IBAction func resetButtonPressed(_ sender: Any) {
+        // Call the restart session metohd to restart the world origin
+        self.restartSession();
+    }
+    
+    func restartSession() {
+        // Stops the device keeping track of your device and orientation
+        self.sceneView.session.pause();
+        
+        // enumerate through all the child nodes and remove them
+        self.sceneView.scene.rootNode.enumerateChildNodes { (node, _) in
+            node.removeFromParentNode();
+        }
+    }
+    
     @IBAction func addButtonPressed(_ sender: Any) {
         // A node is a position in space with no shape, size or color
         let node = SCNNode();
@@ -39,11 +54,14 @@ class ViewController: UIViewController {
         node.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
         
         // 3d vector of where it the node should be
-        node.position = SCNVector3(-0.3,-0.2,0.5);
+        node.position = SCNVector3(0,0,0.3);
         
         // Add the node to the root node
         self.sceneView.scene.rootNode.addChildNode(node)
         
+        // reset the original configuration and resets tracking creating a new one
+        // an anchor is information about the location and orientation of an object
+        self.sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors]);
     }
     
     override func didReceiveMemoryWarning() {
