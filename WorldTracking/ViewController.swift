@@ -26,6 +26,9 @@ class ViewController: UIViewController {
         
         // Make the sceneview run the configurations
         self.sceneView.session.run(configuration)
+        
+        // Lets scene kit automatically add lighting (omnidirectional)
+        self.sceneView.autoenablesDefaultLighting = true
     }
     
     @IBAction func resetButtonPressed(_ sender: Any) {
@@ -41,6 +44,10 @@ class ViewController: UIViewController {
         self.sceneView.scene.rootNode.enumerateChildNodes { (node, _) in
             node.removeFromParentNode();
         }
+        
+        // reset the original configuration and resets tracking creating a new one
+        // an anchor is information about the location and orientation of an object
+        self.sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors]);
     }
     
     @IBAction func addButtonPressed(_ sender: Any) {
@@ -48,20 +55,30 @@ class ViewController: UIViewController {
         let node = SCNNode();
         
         // Create a box shape with a size of 0.1 and is not rounded
-        node.geometry = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0);
+        // if we give the chamferRadius a value we get a rounder looking box
+        node.geometry = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0.03);
+        
+        // changes the specular (light reflected off a surface) response to lighting to white
+        node.geometry?.firstMaterial?.specular.contents = UIColor.orange;
         
         // Give the box a color
         node.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
         
+        // get a random num x, y and z between -0.3 and 0.3
+        let x = randomNumbers(firstNum: -0.3, secondNum: 0.3);
+        let y = randomNumbers(firstNum: -0.3, secondNum: 0.3);
+        let z = randomNumbers(firstNum: -0.3, secondNum: 0.3);
+        
         // 3d vector of where it the node should be
-        node.position = SCNVector3(0,0,0.3);
+        node.position = SCNVector3(x, y, z);
         
         // Add the node to the root node
         self.sceneView.scene.rootNode.addChildNode(node)
-        
-        // reset the original configuration and resets tracking creating a new one
-        // an anchor is information about the location and orientation of an object
-        self.sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors]);
+    }
+    
+    // generates a random number given a minimum and maximum value
+    func randomNumbers(firstNum: CGFloat, secondNum: CGFloat) -> CGFloat {
+        return CGFloat(arc4random()) / CGFloat(UINT32_MAX) * abs(firstNum - secondNum) + min(firstNum, secondNum)
     }
     
     override func didReceiveMemoryWarning() {
