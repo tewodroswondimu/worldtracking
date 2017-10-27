@@ -56,13 +56,57 @@ class ViewController: UIViewController {
         
         // Create a box shape with a size of 0.1 and is not rounded
         // if we give the chamferRadius a value we get a rounder looking box
-        node.geometry = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0.03);
+        // node.geometry = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0.03);
+        
+        // Create a capsule with 0.1m radius, 0.3m height, green color and yellow lighting
+        // node.geometry = SCNCapsule(capRadius: 0.1, height: 0.3)
+        
+        // Create a cone with a top of 0.1m, a bottom of 0.3m and height of 0.3m
+        // this can be changed to a cone by making the top radius and bottom radius equal
+        // node.geometry = SCNCone(topRadius: 0.1, bottomRadius: 0.3, height: 0.3)
+        
+        // Create a cylinder with a radius of 0.2m and 0.2m height
+        // node.geometry = SCNCylinder(radius: 0.2, height: 0.2);
+        
+        // Creating a sphere with 0.2m radius
+        // node.geometry = SCNSphere(radius: 0.2);
+        
+        // a tube is similar to a cylinder but has two radius, a inner and outer one
+        // node.geometry = SCNTube(innerRadius: 0.1, outerRadius: 0.2, height: 0.3);
+        
+        // A torus is look like a doughnut with ring radius how wide, pipeRadius how thick
+        // the pipe radius should be smaller than the ring radius
+        // node.geometry = SCNTorus(ringRadius: 0.3, pipeRadius: 0.1)
+        
+        // a plane is a flat surface with no depth
+        // node.geometry = SCNPlane(width: 0.1, height: 0.1)
+        
+        // A pyramid has a lenghth height and width
+        // node.geometry = SCNPyramid(width: 0.1, height: 0.1, length: 0.1)
+        
+        // basier path is create custom path by drawing lines between two or more points
+        // to start drawing a line we create a UIBezierPath object and move it to the origin
+        let path = UIBezierPath()
+        path.move(to: CGPoint(x: 0, y: 0))
+        
+        // Once the pat has been created we can add more lines
+        // The paths below allow us to draw a house
+        path.addLine(to: CGPoint(x:0, y:0))
+        path.addLine(to: CGPoint(x:0, y:0.2))
+        path.addLine(to: CGPoint(x:0.2, y: 0.3))
+        path.addLine(to: CGPoint(x:0.4, y: 0.2))
+        path.addLine(to: CGPoint(x:0.4, y: 0))
+        
+        // assign to geometry
+        let shape = SCNShape(path: path, extrusionDepth: 0.2)
+        node.geometry = shape
         
         // changes the specular (light reflected off a surface) response to lighting to white
         node.geometry?.firstMaterial?.specular.contents = UIColor.orange;
         
         // Give the box a color
         node.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+     
         
         // get a random num x, y and z between -0.3 and 0.3
         let x = randomNumbers(firstNum: -0.3, secondNum: 0.3);
